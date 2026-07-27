@@ -2,18 +2,31 @@ import 'dotenv/config';
 import { client } from '../src/services/redis';
 
 const run = async () => {
-    // clear out any pre-existing key with a conflicting type
-    await client.del("car");
 
-    await client.hSet("car", {
+    await client.hSet("car1", {
         color: "red",
-        year: 2020,
-        price: 20000,
-        engine: { cylinders: 8 },
-        owner: null,
-        service: undefined
+        year: 2020
     });
-    const car = await client.hGetAll("car");
-    console.log(car);
+
+
+    await client.hSet("car2", {
+        color: "black",
+        year: 2010
+    });
+
+
+    await client.hSet("car3", {
+        color: "green",
+        year: 2022
+    });
+
+    const results = await Promise.all([
+        client.hGetAll("car1"),
+        client.hGetAll("car2"),
+        client.hGetAll("car3"),
+    ])
+
+    console.log(results)
+
 };
 run();
